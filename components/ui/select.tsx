@@ -19,14 +19,14 @@ export interface SelectProps {
   className?: string;
 }
 
-function Select({ 
-  value, 
-  onChange, 
-  options, 
-  placeholder = 'Select an option', 
-  disabled, 
+function Select({
+  value,
+  onChange,
+  options,
+  placeholder = 'Select an option',
+  disabled,
   error,
-  className 
+  className
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ function Select({
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           className={cn(
-            'flex h-11 w-full items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm transition-colors focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:focus:border-zinc-500 dark:focus:ring-zinc-800',
+            'flex h-12 w-full items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm transition-colors focus:outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:focus:border-zinc-500 dark:focus:ring-zinc-800',
             isOpen && 'border-zinc-400 ring-2 ring-zinc-100 dark:border-zinc-500 dark:ring-zinc-800',
             error && 'border-red-300 focus:border-red-400 focus:ring-red-100',
             className
@@ -66,11 +66,11 @@ function Select({
           <span className={cn(!selectedOption && 'text-zinc-400')}>
             {selectedOption?.label || placeholder}
           </span>
-          <ChevronDown 
+          <ChevronDown
             className={cn(
               'h-4 w-4 text-zinc-500 transition-transform duration-200',
               isOpen && 'rotate-180'
-            )} 
+            )}
           />
         </button>
 

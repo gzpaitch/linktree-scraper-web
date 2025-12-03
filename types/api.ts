@@ -104,3 +104,60 @@ export interface ApiError {
   detail: string;
   status?: number;
 }
+
+// Serper.dev Types
+export type SerperSearchMode = 'places' | 'search';
+
+export interface SerperSearchParams {
+  q: string;
+  location?: string;
+  gl?: string; // country code (e.g., 'de', 'us', 'br')
+  hl?: string; // language code (e.g., 'de', 'en', 'pt')
+  num?: number;
+}
+
+export interface SerperSearchParameters {
+  q: string;
+  gl?: string;
+  hl?: string;
+  type: string;
+  num?: number;
+  page?: number;
+  location?: string;
+  engine: string;
+}
+
+// Places mode response
+export interface SerperPlace {
+  position: number;
+  title: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  rating?: number;
+  ratingCount?: number;
+  category?: string;
+  phoneNumber?: string;
+  website?: string;
+  cid: string;
+}
+
+export interface SerperPlacesResponse {
+  searchParameters: SerperSearchParameters;
+  places: SerperPlace[];
+  credits: number;
+}
+
+// Search mode response
+export interface SerperOrganicResult {
+  title: string;
+  link: string;
+  snippet: string;
+  position: number;
+}
+
+export interface SerperSearchResponse {
+  searchParameters: SerperSearchParameters;
+  organic: SerperOrganicResult[];
+  credits: number;
+}
