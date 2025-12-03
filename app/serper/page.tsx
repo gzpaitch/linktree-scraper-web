@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SerperSearchForm, SerperPlacesResults, SerperSearchResults } from '@/components/features';
 import { serperSearch } from '@/lib/api';
-import { Badge } from '@/components/ui';
+import { Badge, Button } from '@/components/ui';
+import { X } from 'lucide-react';
 import type { SerperSearchMode, SerperSearchParams, SerperPlacesResponse, SerperSearchResponse } from '@/types';
 
 type SearchResult = {
@@ -11,10 +12,31 @@ type SearchResult = {
   data: SerperPlacesResponse | SerperSearchResponse;
 };
 
+const STORAGE_KEY = 'serper-search-results';
+
 export default function SerperPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<SearchResult | null>(null);
+
+  // Load results from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setResult(JSON.parse(stored));
+      }
+    } catch {
+      // Ignore errors
+    }
+  }, []);
+
+  // Save results to sessionStorage when they change
+  useEffect(() => {
+    if (result) {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+    }
+  }, [result]);
 
   const handleSearch = async (mode: SerperSearchMode, params: SerperSearchParams) => {
     setIsLoading(true);
@@ -29,6 +51,11 @@ export default function SerperPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const clearResults = () => {
+    setResult(null);
+    sessionStorage.removeItem(STORAGE_KEY);
   };
 
   const isPlacesResult = (r: SearchResult): r is { mode: 'places'; data: SerperPlacesResponse } => {
@@ -53,6 +80,15 @@ export default function SerperPage() {
               <Badge variant="secondary">{result.data.searchParameters.location}</Badge>
             )}
             <span className="ml-auto">Credits used: {result.data.credits}</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearResults}
+              className="ml-2 text-zinc-400 hover:text-zinc-600"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Clear
+            </Button>
           </div>
 
           {isPlacesResult(result) ? (
