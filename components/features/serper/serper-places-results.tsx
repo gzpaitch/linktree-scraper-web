@@ -53,34 +53,34 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
   };
 
   return (
-    <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-      <div className="p-5">
+    <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+      <div className="p-4 sm:p-5">
         {/* Title & Category */}
-        <div className="mb-4">
-          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 text-base">
+        <div className="mb-4 min-w-0">
+          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base break-words">
             {place.title}
           </h3>
           {place.category && (
-            <span className="text-sm text-zinc-400">{place.category}</span>
+            <span className="text-xs sm:text-sm text-zinc-400">{place.category}</span>
           )}
         </div>
 
         {/* Details Grid */}
         <div className="space-y-2 mb-5">
-          <div className="flex items-start gap-3 text-sm">
+          <div className="flex items-start gap-2 sm:gap-3 text-sm min-w-0">
             <MapPin className="h-4 w-4 text-zinc-400 mt-0.5 shrink-0" />
-            <span className="text-zinc-600 dark:text-zinc-400">{place.address}</span>
+            <span className="text-zinc-600 dark:text-zinc-400 break-words min-w-0">{place.address}</span>
           </div>
           
           {place.phoneNumber && (
-            <div className="flex items-center gap-3 text-sm">
+            <div className="flex items-center gap-2 sm:gap-3 text-sm">
               <Phone className="h-4 w-4 text-zinc-400 shrink-0" />
               <span className="text-zinc-600 dark:text-zinc-400">{place.phoneNumber}</span>
             </div>
           )}
           
           {place.rating && (
-            <div className="flex items-center gap-3 text-sm">
+            <div className="flex items-center gap-2 sm:gap-3 text-sm">
               <Star className="h-4 w-4 text-zinc-400 shrink-0" />
               <span className="text-zinc-600 dark:text-zinc-400">
                 {place.rating} {place.ratingCount && `(${place.ratingCount} reviews)`}
@@ -91,19 +91,19 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
 
         {/* Website Link */}
         {hasWebsite && (
-          <div className="flex items-center gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800 overflow-hidden">
+          <div className="flex items-center gap-2 sm:gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800 min-w-0">
             <a
               href={place.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="min-w-0 flex-1 flex items-center gap-2 text-zinc-900 dark:text-zinc-100 hover:underline text-sm font-medium"
+              className="min-w-0 flex-1 flex items-center gap-2 text-zinc-900 dark:text-zinc-100 hover:underline text-xs sm:text-sm font-medium overflow-hidden"
             >
               <ExternalLink className="h-4 w-4 shrink-0 text-zinc-400" />
               <span className="truncate">{place.website}</span>
             </a>
             <button
               onClick={() => copyToClipboard(place.website!)}
-              className="shrink-0 p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+              className="shrink-0 p-1.5 sm:p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
               title="Copy URL"
             >
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
@@ -171,12 +171,12 @@ export function SerperPlacesResults({ places }: SerperPlacesResultsProps) {
   const withoutWebsite = places.filter(p => !p.website);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800">
+    <div className="space-y-6 min-w-0 w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pb-2 border-b border-zinc-200 dark:border-zinc-800">
         <h2 className="font-medium text-zinc-900 dark:text-zinc-100">
           Places
         </h2>
-        <span className="text-sm text-zinc-500">
+        <span className="text-xs sm:text-sm text-zinc-500">
           {places.length} results {withWebsite.length > 0 && `· ${withWebsite.length} with website`}
         </span>
       </div>
