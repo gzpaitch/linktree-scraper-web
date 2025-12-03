@@ -2,10 +2,13 @@
 
 import { useState } from 'react';
 import type { SerperOrganicResult } from '@/types';
-import { ExternalLink, Copy, Check } from 'lucide-react';
+import { ExternalLink, Copy, Check, X } from 'lucide-react';
+import { Button } from '@/components/ui';
 
 interface SerperSearchResultsProps {
   results: SerperOrganicResult[];
+  query: string;
+  onClear: () => void;
 }
 
 function isLinktreeUrl(url: string): boolean {
@@ -68,19 +71,31 @@ function ResultCard({ result }: { result: SerperOrganicResult }) {
   );
 }
 
-export function SerperSearchResults({ results }: SerperSearchResultsProps) {
+export function SerperSearchResults({ results, query, onClear }: SerperSearchResultsProps) {
   const linktreeResults = results.filter(r => isLinktreeUrl(r.link));
   const otherResults = results.filter(r => !isLinktreeUrl(r.link));
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800">
-        <h2 className="font-medium text-zinc-900 dark:text-zinc-100">
-          Web Results
-        </h2>
-        <span className="text-sm text-zinc-500">
-          {results.length} results {linktreeResults.length > 0 && `· ${linktreeResults.length} Linktree`}
-        </span>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
+        <div>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100 text-lg">
+            Web Results
+          </h2>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            {results.length} results for &quot;{query}&quot;
+            {linktreeResults.length > 0 && ` · ${linktreeResults.length} Linktree`}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onClear}
+          className="text-zinc-400 hover:text-zinc-600 shrink-0"
+        >
+          <X className="h-4 w-4 mr-1" />
+          Clear
+        </Button>
       </div>
 
       {linktreeResults.length > 0 && (

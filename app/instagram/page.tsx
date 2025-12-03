@@ -29,7 +29,16 @@ export default function InstagramPage() {
   const canLoadPosts = profileApi.data && !profileApi.data.is_private && !postsApi.data;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+          Instagram
+        </h1>
+        <p className="text-sm sm:text-base text-zinc-500 mt-1">
+          Search Instagram profiles and posts
+        </p>
+      </div>
+
       <InstagramSearch onSearch={handleSearch} isLoading={profileApi.isLoading} />
 
       {profileApi.error && (

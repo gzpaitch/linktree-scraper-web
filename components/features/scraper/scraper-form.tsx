@@ -2,12 +2,14 @@
 
 import { useState, type FormEvent } from 'react';
 import { Button, Input, Select, Textarea, Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui';
+import { Search, Zap } from 'lucide-react';
 import type { TemplateName } from '@/types';
 
 interface ScraperFormProps {
   onSubmit: (data: { user: string; info?: string; template_name?: TemplateName }) => void;
   isLoading?: boolean;
   mode: 'scrape' | 'process';
+  onModeChange: (mode: 'scrape' | 'process') => void;
 }
 
 const TEMPLATES = [
@@ -18,7 +20,7 @@ const TEMPLATES = [
   { value: 'transform', label: 'Transform' },
 ];
 
-export function ScraperForm({ onSubmit, isLoading, mode }: ScraperFormProps) {
+export function ScraperForm({ onSubmit, isLoading, mode, onModeChange }: ScraperFormProps) {
   const [user, setUser] = useState('');
   const [info, setInfo] = useState('');
   const [templateName, setTemplateName] = useState<TemplateName>('general');
@@ -37,14 +39,44 @@ export function ScraperForm({ onSubmit, isLoading, mode }: ScraperFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {mode === 'scrape' ? 'Scrape User' : 'Full Process'}
-        </CardTitle>
-        <CardDescription>
-          {mode === 'scrape' 
-            ? 'Extract data from a Linktree profile'
-            : 'Scrape, AI processing & Firebase upload'}
-        </CardDescription>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <CardTitle>
+              {mode === 'scrape' ? 'Scrape User' : 'Full Process'}
+            </CardTitle>
+            <CardDescription>
+              {mode === 'scrape' 
+                ? 'Extract data from a Linktree profile'
+                : 'Scrape, AI processing & Firebase upload'}
+            </CardDescription>
+          </div>
+          <div className="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg shrink-0">
+            <button
+              type="button"
+              onClick={() => onModeChange('scrape')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                mode === 'scrape'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Search className="h-4 w-4" />
+              Scrape
+            </button>
+            <button
+              type="button"
+              onClick={() => onModeChange('process')}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                mode === 'process'
+                  ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+              }`}
+            >
+              <Zap className="h-4 w-4" />
+              Process
+            </button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-5">

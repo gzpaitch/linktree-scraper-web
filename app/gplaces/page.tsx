@@ -50,7 +50,16 @@ export default function GPlacesPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+          Google Places
+        </h1>
+        <p className="text-sm sm:text-base text-zinc-500 mt-1">
+          Search Google Places API
+        </p>
+      </div>
+
       {view.type !== 'details' && (
         <GPlacesSearchForm onSubmit={handleSearch} isLoading={isLoading} />
       )}

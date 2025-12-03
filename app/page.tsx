@@ -5,7 +5,7 @@ import { ScraperForm, ScraperResult } from '@/components/features';
 import { useApiState } from '@/hooks';
 import { scrapeUser, processUserComplete } from '@/lib/api';
 import type { ScrapeUserRequest, ScrapeUserResponse, ProcessCompleteResponse } from '@/types';
-import { Search, Zap, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 type Mode = 'scrape' | 'process';
 
@@ -34,34 +34,19 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="inline-flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg">
-        <button
-          onClick={() => setMode('scrape')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            mode === 'scrape'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-          }`}
-        >
-          <Search className="h-4 w-4" />
-          Scrape Only
-        </button>
-        <button
-          onClick={() => setMode('process')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            mode === 'process'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-sm'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-          }`}
-        >
-          <Zap className="h-4 w-4" />
-          Full Process
-        </button>
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+          Scraper
+        </h1>
+        <p className="text-sm sm:text-base text-zinc-500 mt-1">
+          Scrape and process Linktree profiles
+        </p>
       </div>
 
       <ScraperForm
         mode={mode}
+        onModeChange={setMode}
         onSubmit={handleSubmit}
         isLoading={isLoading}
       />

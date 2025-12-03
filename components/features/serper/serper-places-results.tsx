@@ -4,11 +4,14 @@ import type { SerperPlace } from '@/types';
 import { sendLinkPlacesWebhook } from '@/lib/api';
 import { useBookmarks } from '@/hooks';
 import { Button } from '@/components/ui';
-import { MapPin, Phone, Star, ExternalLink, Copy, Check, Send, Loader2, Bookmark } from 'lucide-react';
+import { MapPin, Phone, Star, ExternalLink, Copy, Check, Send, Loader2, Bookmark, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface SerperPlacesResultsProps {
   places: SerperPlace[];
+  query: string;
+  location?: string;
+  onClear: () => void;
 }
 
 interface PlaceCardProps {
@@ -131,9 +134,9 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
             size="lg"
             className={`w-full sm:flex-1 ${
               webhookState === 'success'
-                ? '!bg-green-100 !text-green-700 dark:!bg-green-900/30 dark:!text-green-400'
+                ? 'bg-green-100! text-green-700! dark:bg-green-900/30! dark:text-green-400!'
                 : webhookState === 'error'
-                ? '!bg-red-100 !text-red-700 dark:!bg-red-900/30 dark:!text-red-400'
+                ? 'bg-red-100! text-red-700 dark:bg-red-900/30 dark:text-red-400!'
                 : ''
             }`}
           >
@@ -162,20 +165,32 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
   );
 }
 
-export function SerperPlacesResults({ places }: SerperPlacesResultsProps) {
+export function SerperPlacesResults({ places, query, location, onClear }: SerperPlacesResultsProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const withWebsite = places.filter(p => p.website);
   const withoutWebsite = places.filter(p => !p.website);
 
   return (
     <div className="space-y-6 min-w-0 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pb-2 border-b border-zinc-200 dark:border-zinc-800">
-        <h2 className="font-medium text-zinc-900 dark:text-zinc-100 text-lg">
-          Places
-        </h2>
-        <span className="text-sm text-zinc-500">
-          {places.length} results {withWebsite.length > 0 && `· ${withWebsite.length} with website`}
-        </span>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 pb-3 border-b border-zinc-200 dark:border-zinc-800">
+        <div>
+          <h2 className="font-medium text-zinc-900 dark:text-zinc-100 text-lg">
+            Places
+          </h2>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            {places.length} results for &quot;{query}&quot;{location && ` in ${location}`}
+            {withWebsite.length > 0 && ` · ${withWebsite.length} with website`}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onClear}
+          className="text-zinc-400 hover:text-zinc-600 shrink-0"
+        >
+          <X className="h-4 w-4 mr-1" />
+          Clear
+        </Button>
       </div>
 
       {withWebsite.length > 0 && (

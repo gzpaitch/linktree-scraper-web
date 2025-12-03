@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { SerperSearchForm, SerperPlacesResults, SerperSearchResults } from '@/components/features';
 import { serperSearch } from '@/lib/api';
-import { Badge, Button } from '@/components/ui';
-import { X } from 'lucide-react';
 import type { SerperSearchMode, SerperSearchParams, SerperPlacesResponse, SerperSearchResponse } from '@/types';
 
 type SearchResult = {
@@ -63,7 +61,16 @@ export default function SerperPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+          Serper
+        </h1>
+        <p className="text-sm sm:text-base text-zinc-500 mt-1">
+          Search the web and find places
+        </p>
+      </div>
+
       <SerperSearchForm onSubmit={handleSearch} isLoading={isLoading} />
 
       {error && (
@@ -73,34 +80,22 @@ export default function SerperPage() {
       )}
 
       {result && (
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-zinc-500">
-            <div className="flex flex-wrap items-center gap-2 min-w-0">
-              <span className="truncate">Query: &quot;{result.data.searchParameters.q}&quot;</span>
-              {result.data.searchParameters.location && (
-                <Badge variant="secondary">{result.data.searchParameters.location}</Badge>
-              )}
-            </div>
-            <div className="flex items-center gap-2 sm:ml-auto shrink-0">
-              <span>Credits: {result.data.credits}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearResults}
-                className="text-zinc-400 hover:text-zinc-600"
-              >
-                <X className="h-4 w-4 mr-1" />
-                Clear
-              </Button>
-            </div>
-          </div>
-
+        <>
           {isPlacesResult(result) ? (
-            <SerperPlacesResults places={result.data.places} />
+            <SerperPlacesResults 
+              places={result.data.places} 
+              query={result.data.searchParameters.q}
+              location={result.data.searchParameters.location}
+              onClear={clearResults}
+            />
           ) : (
-            <SerperSearchResults results={(result.data as SerperSearchResponse).organic} />
+            <SerperSearchResults 
+              results={(result.data as SerperSearchResponse).organic}
+              query={result.data.searchParameters.q}
+              onClear={clearResults}
+            />
           )}
-        </div>
+        </>
       )}
     </div>
   );
