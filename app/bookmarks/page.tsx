@@ -1,23 +1,18 @@
 'use client';
 
-import type { SerperPlace } from '@/types';
-import { sendLinkPlacesWebhook } from '@/lib/api';
 import { useBookmarks } from '@/hooks';
-import { MapPin, Phone, Star, ExternalLink, Copy, Check, Send, Loader2, Bookmark } from 'lucide-react';
+import { sendLinkPlacesWebhook } from '@/lib/api';
+import { MapPin, Phone, Star, ExternalLink, Copy, Check, Send, Loader2, Bookmark, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import type { SerperPlace } from '@/types';
 
-interface SerperPlacesResultsProps {
-  places: SerperPlace[];
-}
-
-interface PlaceCardProps {
-  place: SerperPlace;
-  isBookmarked: boolean;
-  onToggleBookmark: () => void;
-}
-
-function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
-  const hasWebsite = !!place.website;
+function BookmarkCard({ 
+  place, 
+  onRemove 
+}: { 
+  place: SerperPlace; 
+  onRemove: () => void;
+}) {
   const [copied, setCopied] = useState(false);
   const [webhookState, setWebhookState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -65,7 +60,7 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
           )}
         </div>
 
-        {/* Details Grid */}
+        {/* Details */}
         <div className="space-y-2 mb-5">
           <div className="flex items-start gap-3 text-sm">
             <MapPin className="h-4 w-4 text-zinc-400 mt-0.5 shrink-0" />
@@ -89,8 +84,8 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
           )}
         </div>
 
-        {/* Website Link */}
-        {hasWebsite && (
+        {/* Website */}
+        {place.website && (
           <div className="flex items-center gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800 overflow-hidden">
             <a
               href={place.website}
@@ -113,20 +108,16 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-4">
-          {/* Bookmark Button */}
+          {/* Remove Button */}
           <button
-            onClick={onToggleBookmark}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isBookmarked
-                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
-            }`}
+            onClick={onRemove}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 transition-colors"
           >
-            <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
-            {isBookmarked ? 'Saved' : 'Save'}
+            <Trash2 className="h-4 w-4" />
+            Remove
           </button>
 
-          {/* Send to Webhook Button */}
+          {/* Webhook Button */}
           <button
             onClick={sendToWebhook}
             disabled={webhookState === 'loading'}
@@ -149,9 +140,7 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
                 Sent!
               </>
             ) : webhookState === 'error' ? (
-              <>
-                Error
-              </>
+              'Error'
             ) : (
               <>
                 <Send className="h-4 w-4" />
@@ -165,55 +154,59 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
   );
 }
 
-export function SerperPlacesResults({ places }: SerperPlacesResultsProps) {
-  const { isBookmarked, toggleBookmark } = useBookmarks();
-  const withWebsite = places.filter(p => p.website);
-  const withoutWebsite = places.filter(p => !p.website);
+export default function BookmarksPage() {
+  const { bookmarks, isLoaded, removeBookmark, clearBookmarks } = useBookmarks();
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800">
-        <h2 className="font-medium text-zinc-900 dark:text-zinc-100">
-          Places
-        </h2>
-        <span className="text-sm text-zinc-500">
-          {places.length} results {withWebsite.length > 0 && `· ${withWebsite.length} with website`}
-        </span>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Bookmarks
+          </h1>
+          <p className="text-sm text-zinc-500 mt-1">
+            {bookmarks.length} saved place{bookmarks.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        
+        {bookmarks.length > 0 && (
+          <button
+            onClick={clearBookmarks}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+          >
+            <Trash2 className="h-4 w-4" />
+            Clear All
+          </button>
+        )}
       </div>
 
-      {withWebsite.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-            With Website
+      {bookmarks.length === 0 ? (
+        <div className="text-center py-12">
+          <Bookmark className="h-12 w-12 mx-auto text-zinc-300 dark:text-zinc-600 mb-4" />
+          <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2">
+            No bookmarks yet
           </h3>
-          <div className="grid gap-4">
-            {withWebsite.map((place) => (
-              <PlaceCard 
-                key={place.cid} 
-                place={place}
-                isBookmarked={isBookmarked(place.cid)}
-                onToggleBookmark={() => toggleBookmark(place)}
-              />
-            ))}
-          </div>
+          <p className="text-sm text-zinc-500">
+            Save places from search results to view them here.
+          </p>
         </div>
-      )}
-
-      {withoutWebsite.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
-            Without Website
-          </h3>
-          <div className="grid gap-4 opacity-40">
-            {withoutWebsite.map((place) => (
-              <PlaceCard 
-                key={place.cid} 
-                place={place}
-                isBookmarked={isBookmarked(place.cid)}
-                onToggleBookmark={() => toggleBookmark(place)}
-              />
-            ))}
-          </div>
+      ) : (
+        <div className="grid gap-4">
+          {bookmarks.map((place) => (
+            <BookmarkCard
+              key={place.cid}
+              place={place}
+              onRemove={() => removeBookmark(place.cid)}
+            />
+          ))}
         </div>
       )}
     </div>
