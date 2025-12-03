@@ -37,7 +37,7 @@ export default function InstagramPage() {
           <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <p className="font-medium text-red-800 dark:text-red-300">Error</p>
-            <p className="text-sm text-red-600 dark:text-red-400 mt-0.5 break-words">{profileApi.error.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400 mt-0.5 wrap-break-word">{profileApi.error.message}</p>
           </div>
         </div>
       )}
@@ -65,7 +65,7 @@ export default function InstagramPage() {
           <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
           <div className="min-w-0 flex-1">
             <p className="font-medium text-red-800 dark:text-red-300">Error loading posts</p>
-            <p className="text-sm text-red-600 dark:text-red-400 mt-0.5 break-words">{postsApi.error.message}</p>
+            <p className="text-sm text-red-600 dark:text-red-400 mt-0.5 wrap-break-word">{postsApi.error.message}</p>
           </div>
         </div>
       )}

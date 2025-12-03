@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import type { GPlacesDetails, GPlacesPhoto } from '@/types';
 import { getPhotoUrl, uploadFromUrl } from '@/lib/api';
+import { Button } from '@/components/ui';
 import { 
   MapPin, Phone, Globe, Star, Clock, ArrowLeft, ExternalLink, 
   Copy, Check, Upload, Loader2, X, CheckCircle, ImageIcon
@@ -161,13 +162,14 @@ export function GPlacesDetailsView({ place, onBack }: GPlacesDetailsProps) {
       )}
 
       {/* Back Button */}
-      <button
+      <Button
         onClick={onBack}
-        className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+        variant="ghost"
+        className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to results
-      </button>
+      </Button>
 
       {/* Main Card */}
       <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
@@ -204,13 +206,14 @@ export function GPlacesDetailsView({ place, onBack }: GPlacesDetailsProps) {
           </div>
 
           {/* Copy Summary Button */}
-          <button
+          <Button
             onClick={() => copyToClipboard(formatSummary(), 'Summary')}
-            className="w-full mb-4 sm:mb-6 flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-sm sm:text-base"
+            size="lg"
+            className="w-full mb-4 sm:mb-6"
           >
             <Copy className="h-4 w-4" />
             Copy Summary
-          </button>
+          </Button>
 
           {/* Details */}
           <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
@@ -334,45 +337,46 @@ export function GPlacesDetailsView({ place, onBack }: GPlacesDetailsProps) {
             </h3>
             
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <button
+              <Button
                 onClick={selectAllPhotos}
                 disabled={batchState.isUploading}
-                className="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-50"
+                variant="outline"
+                size="sm"
               >
                 Select All ({place.photos.length})
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={deselectAllPhotos}
                 disabled={batchState.isUploading}
-                className="px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-50"
+                variant="outline"
+                size="sm"
               >
                 Deselect All
-              </button>
+              </Button>
               {batchState.selectedPhotos.size > 0 && (
-                <span className="text-xs sm:text-sm text-zinc-500">
+                <span className="text-sm text-zinc-500">
                   {batchState.selectedPhotos.size} selected
                 </span>
               )}
             </div>
 
             {batchState.selectedPhotos.size > 0 && (
-              <button
+              <Button
                 onClick={performBatchUpload}
                 disabled={batchState.isUploading}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors"
+                isLoading={batchState.isUploading}
+                size="lg"
+                className="w-full"
               >
                 {batchState.isUploading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Uploading...
-                  </>
+                  'Uploading...'
                 ) : (
                   <>
                     <Upload className="h-4 w-4" />
                     Upload {batchState.selectedPhotos.size} Photo{batchState.selectedPhotos.size !== 1 ? 's' : ''}
                   </>
                 )}
-              </button>
+              </Button>
             )}
 
             {/* Upload Results */}
@@ -399,16 +403,16 @@ export function GPlacesDetailsView({ place, onBack }: GPlacesDetailsProps) {
                 {batchState.results.successful.length > 0 && (
                   <div className="mb-3">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between mb-2">
-                      <span className="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-1">
+                      <span className="text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-1">
                         <CheckCircle className="h-4 w-4" />
                         Successful ({batchState.results.successful.length})
                       </span>
-                      <button
+                      <Button
                         onClick={copyAllUrls}
-                        className="px-3 py-1 text-xs font-medium rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 w-fit"
+                        size="sm"
                       >
                         {allUrlsCopied ? 'Copied!' : `Copy All (${batchState.results.successful.length})`}
-                      </button>
+                      </Button>
                     </div>
                     <div className="space-y-1 max-h-32 overflow-y-auto">
                       {batchState.results.successful.map((result, idx) => (

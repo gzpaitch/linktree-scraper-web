@@ -5,6 +5,7 @@ import { Card, CardHeader, CardContent, Badge } from '@/components/ui';
 import { uploadFromUrl } from '@/lib/api';
 import type { IgProfileInfo } from '@/types';
 import { ExternalLink, BadgeCheck, Lock, User, Upload, Loader2, Check, Copy } from 'lucide-react';
+import Image from 'next/image';
 
 interface InstagramProfileCardProps {
   profile: IgProfileInfo;
@@ -62,12 +63,14 @@ export function InstagramProfileCard({ profile }: InstagramProfileCardProps) {
           <div className="relative group">
             {profile.avatar_url && !imgError ? (
               <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={proxyImageUrl(profile.avatar_url)}
                   alt={profile.username}
-                  className="h-16 w-16 rounded-xl object-cover bg-zinc-100 dark:bg-zinc-800"
+                  className="h-16 w-16 rounded-xl object-cover bg-zinc-10 dark:bg-zinc-800"
                   onError={() => setImgError(true)}
+                  width={64}
+                  height={64}
+                  unoptimized={true}
                 />
                 {!uploadedUrl && (
                   <button

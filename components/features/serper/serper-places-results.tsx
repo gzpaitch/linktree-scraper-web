@@ -3,6 +3,7 @@
 import type { SerperPlace } from '@/types';
 import { sendLinkPlacesWebhook } from '@/lib/api';
 import { useBookmarks } from '@/hooks';
+import { Button } from '@/components/ui';
 import { MapPin, Phone, Star, ExternalLink, Copy, Check, Send, Loader2, Bookmark } from 'lucide-react';
 import { useState } from 'react';
 
@@ -57,32 +58,32 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
       <div className="p-4 sm:p-5">
         {/* Title & Category */}
         <div className="mb-4 min-w-0">
-          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base break-words">
+          <h3 className="font-medium text-zinc-900 dark:text-zinc-100 text-base sm:text-lg break-words">
             {place.title}
           </h3>
           {place.category && (
-            <span className="text-xs sm:text-sm text-zinc-400">{place.category}</span>
+            <span className="text-sm text-zinc-400">{place.category}</span>
           )}
         </div>
 
         {/* Details Grid */}
-        <div className="space-y-2 mb-5">
-          <div className="flex items-start gap-2 sm:gap-3 text-sm min-w-0">
+        <div className="space-y-2.5 mb-5">
+          <div className="flex items-start gap-2 sm:gap-3 min-w-0">
             <MapPin className="h-4 w-4 text-zinc-400 mt-0.5 shrink-0" />
-            <span className="text-zinc-600 dark:text-zinc-400 break-words min-w-0">{place.address}</span>
+            <span className="text-zinc-600 dark:text-zinc-400 break-words min-w-0 text-sm sm:text-base">{place.address}</span>
           </div>
           
           {place.phoneNumber && (
-            <div className="flex items-center gap-2 sm:gap-3 text-sm">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Phone className="h-4 w-4 text-zinc-400 shrink-0" />
-              <span className="text-zinc-600 dark:text-zinc-400">{place.phoneNumber}</span>
+              <span className="text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">{place.phoneNumber}</span>
             </div>
           )}
           
           {place.rating && (
-            <div className="flex items-center gap-2 sm:gap-3 text-sm">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Star className="h-4 w-4 text-zinc-400 shrink-0" />
-              <span className="text-zinc-600 dark:text-zinc-400">
+              <span className="text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">
                 {place.rating} {place.ratingCount && `(${place.ratingCount} reviews)`}
               </span>
             </div>
@@ -96,7 +97,7 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
               href={place.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="min-w-0 flex-1 flex items-center gap-2 text-zinc-900 dark:text-zinc-100 hover:underline text-xs sm:text-sm font-medium overflow-hidden"
+              className="min-w-0 flex-1 flex items-center gap-2 text-zinc-900 dark:text-zinc-100 hover:underline text-sm sm:text-base font-medium overflow-hidden"
             >
               <ExternalLink className="h-4 w-4 shrink-0 text-zinc-400" />
               <span className="truncate">{place.website}</span>
@@ -113,30 +114,28 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-2 mt-4">
-          {/* Bookmark Button */}
-          <button
+          <Button
             onClick={onToggleBookmark}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              isBookmarked
-                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
-            }`}
+            variant={isBookmarked ? 'default' : 'secondary'}
+            size="lg"
+            className="flex-1"
           >
             <Bookmark className={`h-4 w-4 ${isBookmarked ? 'fill-current' : ''}`} />
             {isBookmarked ? 'Saved' : 'Save'}
-          </button>
+          </Button>
 
-          {/* Send to Webhook Button */}
-          <button
+          <Button
             onClick={sendToWebhook}
             disabled={webhookState === 'loading'}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            variant="secondary"
+            size="lg"
+            className={`flex-1 ${
               webhookState === 'success'
-                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                ? '!bg-green-100 !text-green-700 dark:!bg-green-900/30 dark:!text-green-400'
                 : webhookState === 'error'
-                ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
-            } disabled:opacity-50`}
+                ? '!bg-red-100 !text-red-700 dark:!bg-red-900/30 dark:!text-red-400'
+                : ''
+            }`}
           >
             {webhookState === 'loading' ? (
               <>
@@ -149,16 +148,14 @@ function PlaceCard({ place, isBookmarked, onToggleBookmark }: PlaceCardProps) {
                 Sent!
               </>
             ) : webhookState === 'error' ? (
-              <>
-                Error
-              </>
+              'Error'
             ) : (
               <>
                 <Send className="h-4 w-4" />
                 Webhook
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -173,17 +170,17 @@ export function SerperPlacesResults({ places }: SerperPlacesResultsProps) {
   return (
     <div className="space-y-6 min-w-0 w-full">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 pb-2 border-b border-zinc-200 dark:border-zinc-800">
-        <h2 className="font-medium text-zinc-900 dark:text-zinc-100">
+        <h2 className="font-medium text-zinc-900 dark:text-zinc-100 text-lg">
           Places
         </h2>
-        <span className="text-xs sm:text-sm text-zinc-500">
+        <span className="text-sm text-zinc-500">
           {places.length} results {withWebsite.length > 0 && `· ${withWebsite.length} with website`}
         </span>
       </div>
 
       {withWebsite.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+          <h3 className="text-sm font-medium text-zinc-500 uppercase tracking-wider">
             With Website
           </h3>
           <div className="grid gap-4">
@@ -201,7 +198,7 @@ export function SerperPlacesResults({ places }: SerperPlacesResultsProps) {
 
       {withoutWebsite.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+          <h3 className="text-sm font-medium text-zinc-500 uppercase tracking-wider">
             Without Website
           </h3>
           <div className="grid gap-4 opacity-40">

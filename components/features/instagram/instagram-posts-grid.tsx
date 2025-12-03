@@ -3,6 +3,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import type { IgPostInfo } from '@/types';
 import { Heart, MessageCircle, Play } from 'lucide-react';
+import Image from 'next/image';
 
 interface InstagramPostsGridProps {
   posts: IgPostInfo[];
@@ -27,11 +28,13 @@ function PostCard({ post }: { post: IgPostInfo }) {
       rel="noopener noreferrer"
       className="group relative aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={proxyImageUrl(post.media_url)}
         alt={post.caption || 'Instagram post'}
         className="h-full w-full object-cover transition-transform group-hover:scale-105"
+        width={300}
+        height={300}
+        unoptimized={true}
       />
       
       {post.is_video && (
