@@ -116,6 +116,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -130,6 +131,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-y: scroll;
   }
 }
 
@@ -137,25 +139,25 @@
   .gradient-border {
     position: relative;
     background: linear-gradient(var(--background), var(--background)) padding-box,
-                linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;
+      linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;
     border: 2px solid transparent;
   }
-  
+
   .glass {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  
+
   .dark .glass {
     background: rgba(0, 0, 0, 0.6);
   }
-  
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
